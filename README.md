@@ -208,6 +208,12 @@ Authorization: Bearer <your_token>
 ```
 
 
+--------
+------
+
+
+
+
 ## IMPORTANT: Testing Notes
 
 ## หมายเหตุสำหรับการทดสอบ (P2P Trade)
@@ -220,7 +226,6 @@ Authorization: Bearer <your_token>
 - 👤 **User A** → รับบทบาทเป็นผู้ซื้อ (Buyer)
 - 👤 **User B** → รับบทบาทเป็นผู้สร้างประกาศขาย (Seller)
 
----
 
 -----------------------------------------------------------------------------
  **สรุปการทำงานของระบบ (System Workflow)**
