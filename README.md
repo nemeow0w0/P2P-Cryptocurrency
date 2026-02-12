@@ -20,19 +20,14 @@ npm install```
 
 **เตรียมฐานข้อมูลและ Seed ข้อมูล:**
 
-``` bash
-npx prisma migrate dev --name init
-npx prisma db seed
-```
+```bash npx prisma migrate dev --name init
+npx prisma db seed```
   
 *(ไฟล์ Seed จะทำการสร้างเหรียญ BTC, ETH, THB และผู้ใช้ทดสอบให้โดยอัตโนมัติ)*
 
 **รันระบบ:**
 
-```
-npm run dev
-``` bash
-  </pre
+```bashnpm run dev```
 
  **3. ขั้นตอนการทดสอบ**
 
