@@ -10,7 +10,7 @@
 Clone และติดตั้ง Library:
 
 
-<pre>```git clone <your-repo-url>
+<pre>````bash git clone <your-repo-url>
 cd <project-folder>
 npm install``` 
   </pre>
