@@ -10,9 +10,9 @@
 Clone และติดตั้ง Library:
 
 
-```git clone <your-repo-url>
+<pre>```git clone <your-repo-url>
 cd <project-folder>
-npm install```
+npm install``` </project-folder>pre>
 
 **ตั้งค่าไฟล์ .env**
 เปลี่ยนชื่อ ไฟล.env.Exasample เป็น .env ส่ URL ของ Database (PostgreSQL) และ JWT Secret
