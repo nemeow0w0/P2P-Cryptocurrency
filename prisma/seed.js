@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🚀 Start seeding...');
+  console.log("🚀 Start seeding...");
   // 1. ล้างข้อมูลเก่า (ถ้ามี)
   await prisma.transfer.deleteMany();
   await prisma.trade.deleteMany();
@@ -19,6 +19,15 @@ async function main() {
   });
   const btc = await prisma.asset.create({
     data: { symbol: "BTC", name: "Bitcoin", type: "crypto" },
+  });
+  const usd = await prisma.asset.create({
+    data: { symbol: "USD", name: "United States Dollar", type: "fiat" },
+  });
+  const eth = await prisma.asset.create({
+    data: { symbol: "ETH", name: "Ethereum", type: "crypto" },
+  });
+  const xrp = await prisma.asset.create({
+    data: { symbol: "XRP", name: "XRP Ledger", type: "crypto" },
   });
 
   // 3. สร้าง Users
@@ -36,6 +45,9 @@ async function main() {
     data: { userId: userA.id, assetId: thb.id, balance: 1000000 },
   });
   await prisma.wallet.create({
+    data: { userId: userA.id, assetId: usd.id, balance: 1000000 },
+  });
+  await prisma.wallet.create({
     data: { userId: userA.id, assetId: btc.id, balance: 0 },
   });
 
@@ -45,6 +57,9 @@ async function main() {
   });
   await prisma.wallet.create({
     data: { userId: userB.id, assetId: btc.id, balance: 5 },
+  });
+  await prisma.wallet.create({
+    data: { userId: userB.id, assetId: eth.id, balance: 5000 },
   });
 
   console.log("✅ Seed data created successfully!");
