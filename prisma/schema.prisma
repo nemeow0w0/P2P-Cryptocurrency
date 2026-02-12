@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+
+  wallets Wallet[]
+  orders  Order[]
+
+  sentTransfers     Transfer[] @relation("Sender")
+  receivedTransfers Transfer[] @relation("Receiver")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Asset {
+  id     Int    @id @default(autoincrement())
+  symbol String @unique
+  name   String
+  type   String // fiat / crypto
+
+  wallets   Wallet[]
+  orders    Order[]
+  transfers Transfer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("assets")
+}
+
+model Wallet {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  assetId       Int
+  balance       Decimal @default(0) @db.Decimal(20, 8)
+  walletAddress String  @unique @default(uuid())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, assetId])
+  @@map("wallets")
+}
+
+model Order {
+  id      Int     @id @default(autoincrement())
+  userId  Int
+  assetId Int
+  fiatId  Int
+  side    String // buy, sell
+  price   Decimal @db.Decimal(20, 2)
+  amount  Decimal @db.Decimal(20, 8)
+  status  String  @default("open") // open, filled, cancelled
+
+  user  User  @relation(fields: [userId], references: [id])
+  asset Asset @relation(fields: [assetId], references: [id])
+
+  trades Trade[]
+
+  @@map("orders")
+}
+
+model Trade {
+  id       Int     @id @default(autoincrement())
+  orderId  Int
+  buyerId  Int
+  sellerId Int
+  amount   Decimal @db.Decimal(20, 8)
+  price    Decimal @db.Decimal(20, 2)
+
+  order     Order    @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("trades")
+}
+
+model Transfer {
+  id              Int     @id @default(autoincrement())
+  senderId        Int
+  receiverId      Int? // null ถ้าโอนออกนอกระบบ
+  assetId         Int
+  amount          Decimal @db.Decimal(20, 8)
+  type            String // "INTERNAL" หรือ "EXTERNAL"
+  externalAddress String? // สำหรับโอนออกนอกระบบ
+
+  sender   User  @relation("Sender", fields: [senderId], references: [id])
+  receiver User? @relation("Receiver", fields: [receiverId], references: [id])
+  asset    Asset @relation(fields: [assetId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("transfers")
+}
